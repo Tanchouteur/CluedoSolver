@@ -15,11 +15,9 @@ public class Game {
         this.solver = new Solver(gameState);
     }
 
-    // Initialisation des cartes
     private void initializeCards() {
         allCards = new ArrayList<>();
 
-        // Ajouter les cartes de type PERSON
         allCards.add(new Card("Scarlet", CardType.PERSON));
         allCards.add(new Card("Mustard", CardType.PERSON));
         allCards.add(new Card("Plum", CardType.PERSON));
@@ -27,7 +25,6 @@ public class Game {
         allCards.add(new Card("Green", CardType.PERSON));
         allCards.add(new Card("White", CardType.PERSON));
 
-        // Ajouter les cartes de type WEAPON
         allCards.add(new Card("Knife", CardType.WEAPON));
         allCards.add(new Card("Revolver", CardType.WEAPON));
         allCards.add(new Card("Rope", CardType.WEAPON));
@@ -35,7 +32,6 @@ public class Game {
         allCards.add(new Card("Lead Pipe", CardType.WEAPON));
         allCards.add(new Card("Wrench", CardType.WEAPON));
 
-        // Ajouter les cartes de type ROOM
         allCards.add(new Card("Kitchen", CardType.ROOM));
         allCards.add(new Card("Ballroom", CardType.ROOM));
         allCards.add(new Card("Conservatory", CardType.ROOM));
@@ -47,7 +43,6 @@ public class Game {
         allCards.add(new Card("Study", CardType.ROOM));
     }
 
-    // Initialisation des joueurs
     private void initializePlayers() {
         players = new ArrayList<>();
         players.add(new Player("Player 1"));
@@ -55,22 +50,19 @@ public class Game {
         players.add(new Player("Player 3"));
     }
 
-    // Démarrer le jeu
     public void startGame() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Cluedo Solver!");
-        System.out.println("The game has started with " + players.size() + " players.");
 
         boolean gameOver = false;
 
         while (!gameOver) {
             System.out.println("\n--- New Turn ---");
 
-            // Générer une suggestion
             List<Suggestion> possibleSuggestions = solver.generateSuggestions();
             if (!possibleSuggestions.isEmpty()) {
                 System.out.println("Suggested move:");
-                Suggestion bestSuggestion = possibleSuggestions.get(0);
+                Suggestion bestSuggestion = possibleSuggestions.getFirst();
                 System.out.println("Person: " + bestSuggestion.getPerson().getName());
                 System.out.println("Weapon: " + bestSuggestion.getWeapon().getName());
                 System.out.println("Room: " + bestSuggestion.getRoom().getName());
@@ -78,7 +70,6 @@ public class Game {
                 System.out.println("No suggestions available at the moment.");
             }
 
-            // Demander une suggestion de l'utilisateur
             System.out.println("Enter your suggestion:");
             System.out.print("Person: ");
             String personName = scanner.nextLine();
@@ -96,15 +87,12 @@ public class Game {
                 continue;
             }
 
-            Suggestion userSuggestion = new Suggestion(person, weapon, room);
-
-            // Réponse du joueur
             System.out.println("Which player responded to your suggestion?");
             for (int i = 0; i < players.size(); i++) {
                 System.out.println(i + 1 + ": " + players.get(i).getName());
             }
             int playerIndex = scanner.nextInt() - 1;
-            scanner.nextLine(); // Consommer la ligne restante
+            scanner.nextLine();
 
             if (playerIndex < 0 || playerIndex >= players.size()) {
                 System.out.println("Invalid player. Please try again.");
@@ -127,13 +115,11 @@ public class Game {
                 System.out.println(responder.getName() + " revealed no card.");
             }
 
-            // Vérification si toutes les cartes possibles sont résolues
             if (gameState.getPossibleCards().isEmpty()) {
                 System.out.println("\nCongratulations! The solution has been found!");
                 gameOver = true;
             }
 
-            // Afficher les cartes possibles restantes
             System.out.println("Remaining possible cards:");
             for (Card card : gameState.getPossibleCards()) {
                 System.out.println("- " + card.getName() + " (" + card.getType() + ")");
